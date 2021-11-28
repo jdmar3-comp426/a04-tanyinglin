@@ -17,7 +17,7 @@ app.listen(HTTP_PORT, () => {
 });
 // READ (HTTP method GET) at root endpoint /app/
 app.get("/app/", (req, res, next) => {
-    res.json({"message":"Your API works! (200)"});
+    //res.json({"message":"Your API works! (200)"});
 	res.status(200);
 });
 
@@ -26,8 +26,8 @@ app.get("/app/", (req, res, next) => {
 app.post("/app/new/", (req, res) => {
 	const stmt = db.prepare("INSERT INTO userinfo (user, pass) VALUES (?, ?)");
 	const info = stmt.run(req.body.user, md5(req.body.pass));
-	//var dict = {"id": info.lastInsertRowid, "user":req.body.user, "pass":req.body.pass};
-	res.status(201).json({"message": info.changes + " record created: ID" + info.lastInsertRowid});
+	//var dict = {"id": info.lastInsertRowid, "user":req.body.user, "pass":md5(req.body.pass)};
+	res.status(201).send({"message": info.changes + " record created: ID " + info.lastInsertRowid + " (201)"});
 });
 // READ a list of all users (HTTP method GET) at endpoint /app/users/
 app.get("/app/users", (req, res) => {	
