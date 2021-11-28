@@ -5,8 +5,6 @@ var app = express();
 var db = require("./database.js");
 // Require md5 MODULE
 var md5 = require("md5");
-// Require a middleware extension for express 
-var bodyParser = require("body-parser");
 // Make Express use its own built-in body parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -27,9 +25,9 @@ app.get("/app/", (req, res, next) => {
 // CREATE a new user (HTTP method POST) at endpoint /app/new/
 app.post("/app/new/", (req, res) => {
 	const stmt = db.prepare("INSERT INTO userinfo (user, pass) VALUES (?, ?)");
-	const info = stmt.run(req.body.user, req.body.pass);
-	var dict = {"id": info.lastInsertRowid, "user":req.body.user, "pass":req.body.pass};
-	res.status(201).json(dict);
+	const info = stmt.run(req.body.user, md5(req.body.pass));
+	//var dict = {"id": info.lastInsertRowid, "user":req.body.user, "pass":req.body.pass};
+	res.status(201).json({"message": info.changes + " record created: ID" + info.lastInsertRowid});
 });
 // READ a list of all users (HTTP method GET) at endpoint /app/users/
 app.get("/app/users", (req, res) => {	
